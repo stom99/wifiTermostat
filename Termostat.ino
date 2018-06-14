@@ -1,7 +1,6 @@
 /*---Termostat s propojenim na Gogole docs sheet-----*/
 /*---------------------------------------------------*/
 
-
 /*
   **Vstupy** 
   D2 GPIO4 - SW1 aut/man
@@ -537,3 +536,6 @@ void loop() {
     }
   }
 }             
+
+
+//End of the program
