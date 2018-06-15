@@ -2,7 +2,7 @@
 /*---------------------------------------------------*/
 
 /*
-  **Vstupy** 
+  **Vstupy**
   D2 GPIO4 - SW1 aut/man
   D3 GPIO0 - SW2 on/off
   D9 GPIO3 - Teplomer
@@ -16,7 +16,7 @@
   D6 GPIO12 - data/command displeje
   D7 GPIO13 - SDIN displeje
   D8 GPIO15 - /CS displeje
-  D4 GPIO2  - /RES displeje 
+  D4 GPIO2  - /RES displeje
  */
 
 /*------------------Popis pinů displeje--------------*/
@@ -32,7 +32,7 @@
 
 */
 /*---------------------------------------------------*/
-/* 
+/*
  *  Displej má 6 řádků a 14 znaků na řádek
  */
 /*---------------------------------------------------*/
@@ -51,7 +51,7 @@
 #define LED D0
 #define SW_aut_man 4
 #define SW_ON_OFF 0
-#define DHTPIN 3   
+#define DHTPIN 3
 
 // Uncomment whatever DHT sensor type you're using!
 #define DHTTYPE DHT11  // DHT 11
@@ -67,7 +67,7 @@ int chart = 0;
 
 
 const char WEBSITE[] = "api.pushingbox.com";  //pushingbox API server
-const String devid = "vCBF80EA0AE7D345";   //device ID from Pushingbox 
+const String devid = "vCBF80EA0AE7D345";   //device ID from Pushingbox
 
 const char* ssid;
 const char* password;
@@ -106,7 +106,7 @@ WiFiClient client;  //Instantiate WiFi object
 //********************************************************************//
 void setup() {
   ESP.wdtDisable();         // watchdog disable
-  
+
   Serial.begin(9600);       // See the connection status in Serial Monitor
 
   lcd.begin(84, 48);        // PCD8544-compatible displays may have a different resolution...
@@ -126,12 +126,12 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("*Inicializace*");
-  
+
   pinMode(SW_aut_man, INPUT_PULLUP);
   pinMode(SW_ON_OFF, INPUT_PULLUP);
   pinMode(LED, OUTPUT);
-  digitalWrite(LED, HIGH);     // 3.3V  
-  
+  digitalWrite(LED, HIGH);     // 3.3V
+
   ESP.wdtEnable(10000);     // zapne soft wdt po 10s
 }
 
@@ -145,9 +145,9 @@ void wifiConnect(const char* ssid, const char* password) {
 
   lcd.setCursor(0, 0);
   lcd.print((String) ssid + ":O");
- 
+
   WiFi.begin(ssid, password);
- 
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -161,8 +161,8 @@ void wifiConnect(const char* ssid, const char* password) {
   lcd.print((String) ssid + ":X");
   lcd.setCursor(0, 1);
   lcd.print("IP");
-  lcd.print(WiFi.localIP());  
-  
+  lcd.print(WiFi.localIP());
+
 }
 
 void wifiSetIP(){
@@ -175,15 +175,15 @@ void wifiSetIP(){
 //********************************************************************//
 bool httpReqPushingBox(float temp, float humidity, int manON, int manOFF) {
       if (client.connect(WEBSITE, 80))
-      { 
+      {
            client.print("GET /pushingbox?devid=" + devid
          + "&temp="           + (String) temp
          + "&humidity="       + (String) humidity
          + "&manON="          + (String) manON
          + "&manOFF="         + (String) manOFF
            );
-  
-        client.println(" HTTP/1.1"); 
+
+        client.println(" HTTP/1.1");
         client.print("Host: ");
         client.println(WEBSITE);
         client.println("User-Agent: ESP8266/1.0");
@@ -194,21 +194,21 @@ bool httpReqPushingBox(float temp, float humidity, int manON, int manOFF) {
             String line = client.readStringUntil('\r');
             Serial.print(line);
         }
-        
+
         return true;
       }
       else return false;
 }
 
 bool httpReqHTTPSinit() {
-        
+
         HTTPSRedirect client(httpsPort);
         Serial.print("Connecting to ");
         Serial.println(host);
 
         lcd.setCursor(0, 2);
         lcd.print("Google:pripo..");
-      
+
         bool flag = false;
         for (int i=0; i<5; i++){
           int retval = client.connect(host, httpsPort);
@@ -219,10 +219,10 @@ bool httpReqHTTPSinit() {
           else  {
             Serial.println("Connection failed. Retrying...");
             lcd.setCursor(0, 2);
-            lcd.print("Google:nedostu");          
+            lcd.print("Google:nedostu");
           }
         }
-        
+
         Serial.flush();
         if (!flag){
           Serial.print("Could not connect to server: ");
@@ -232,7 +232,7 @@ bool httpReqHTTPSinit() {
           lcd.print("Google:chyba");
           return false;
         }
-        
+
         Serial.flush();
         if (client.verify(fingerprint, host)) {
           Serial.println("Certificate match.");
@@ -249,7 +249,7 @@ bool httpReqHTTPSinit() {
 
 }
 
-bool httpReqHTTPS(float temp, float humidity, int manON, int manOFF, int postLOG) {       
+bool httpReqHTTPS(float temp, float humidity, int manON, int manOFF, int postLOG) {
   HTTPSRedirect client(httpsPort);
   //if (!client.connected() || client.connected()) {  //znova připojit za každé okolnosti
   if (!client.connected()) {
@@ -263,9 +263,9 @@ bool httpReqHTTPS(float temp, float humidity, int manON, int manOFF, int postLOG
     }
     lcd.setCursor(0, 2);
     lcd.clearLine();
-    lcd.print("Google:OK");  
+    lcd.print("Google:OK");
   }
-  
+
   String answer = client.readRedir(String("/macros/s/") + GScriptId
                   + "/exec?temp=" + temp + "&humidity=" + humidity
                   + "&manON=" + manON + "&manOFF=" + manOFF + "&postLOG=" + postLOG,
@@ -276,11 +276,11 @@ bool httpReqHTTPS(float temp, float humidity, int manON, int manOFF, int postLOG
     lcd.print("Google:Vycteno");
 
 //  String answer = client.readRedir(String("/macros/s/") + GScriptId + "/exec?temp=" + temp + "&humidity=" + humidity + "&manON=" + manON + "&manOFF=" + manOFF + "&postLOG=" + postLOG, host, googleRedirHost);
-  
+
   Serial.println("Precteno z tabulky: " + answer);
   //Serial.println("Delka odpovedi: " + (String) answer.length());
   //Serial.println("Nalezeno: " + (String) answer.find("Pozadavek"));
-  
+
   if (answer == "Pozadavek na topeni je:1\r") {
     //Serial.println("Vyhodnoceno jako pozadavek na zapnuti topeni");
     return true;
@@ -299,19 +299,19 @@ void heatingON() {
   pinMode(relay, OUTPUT);
   digitalWrite(relay, LOW);     // 0V
   digitalWrite(LED, LOW);       // 0V
-  
+
   lcd.setCursor(chart, 4);
   lcd.print("->");
   chart++;
   if (chart >=83)
-    chart =0;   
+    chart =0;
 }
 
 void heatingOFF() {
   Serial.println("Vypinam topeni");
   pinMode(relay, INPUT);
   digitalWrite(LED, HIGH);     // 3.3V
-  
+
   lcd.setCursor(chart, 4);
   lcd.print("_>");
   chart++;
@@ -401,26 +401,26 @@ void loop() {
   manON = 0;
   manOFF = 0;
   autMode = 0;
-  manMode = 0; 
-  
+  manMode = 0;
+
   Serial.println("Program startuje...");
   lcd_init();
-  
+
   wifiSetIP();
 
   //ssid = ssid1;
   //password = password1;
-  
+
   //ssid = ssid2;
   //password = password2;
-  
+
   ssid = ssid2;
   password = password2;
 
   wifiConnect(ssid, password);
 
   httpReqHTTPSinit();
-  
+
   Serial.println("Smycka programu start");
   while(1) {
     Serial.println("V zakladni smycce");
@@ -429,7 +429,7 @@ void loop() {
 
     for (;(loop600 < 600);loop60++,loop600++) {
       Serial.println("Cekam: " + (String) loop60 + "s/60s| " + (String) loop600 +  "s/600s");
-      
+
       lcd.setCursor(0, 2);
       lcd.clearLine();
       lcd.print("Google:" + (String) loop60 + "/" + (String) loop600);
@@ -439,7 +439,7 @@ void loop() {
       lcd.setCursor(0, 1);
       lcd.clearLine();
       lcd.print(WiFi.RSSI());
-      
+
 
       // Reading temperature or humidity takes about 250 milliseconds!
       // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
@@ -447,7 +447,7 @@ void loop() {
       // Read temperature as Celsius (the default)
       float t = dht.readTemperature();
 
-      // Updatuj pouze pokud bylo cteni uspesne 
+      // Updatuj pouze pokud bylo cteni uspesne
       if (!(isnan(h))) {
         humidity = h;
       }
@@ -456,7 +456,7 @@ void loop() {
         temp = t;
       }
 
-      
+
       lcd_temp(temp, humidity);
 
       if (digitalRead(SW_aut_man)) {
@@ -464,12 +464,12 @@ void loop() {
         manMode = 0;
         //lcd.setCursor(0, 3);
         //lcd.print("Rezim:AUT");
-        
+
         if (state == true)
           lcd_autHeatON();
         else
           lcd_autHeatOFF();
-        
+
       }
       else {
         autMode = 0;
@@ -496,7 +496,7 @@ void loop() {
       }
 
 
-      
+
       if (loop60 == 60) {
         loop60 = 0;
         if (WiFi.status() != WL_CONNECTED)
@@ -513,7 +513,7 @@ void loop() {
             lcd_autHeatOFF();
           }
         }
-        
+
       }
       delay(700);
       ESP.wdtFeed();
@@ -523,7 +523,7 @@ void loop() {
     if (WiFi.status() != WL_CONNECTED)
       wifiConnect(ssid, password);  //reconnect WiFi pokud nutno
     state = httpReqHTTPS(temp, humidity, manON, manOFF, 1);
-    
+
     if (autMode == 1) {
       if ((state == true) && (temp  < 26)) {  //pojistka, aby se nepretopilo pri chybe v Google docs
         heatingON();
@@ -532,11 +532,12 @@ void loop() {
       else {
         heatingOFF();
         lcd_autHeatOFF();
-      }                      
+      }
     }
   }
-}             
+}
 
 
 //End of the program
 //Comment 1
+//Comment 2 branch 3
