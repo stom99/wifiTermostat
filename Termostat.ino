@@ -1,6 +1,6 @@
-/*---Termostat s propojenim na Gogole docs sheet-----*/
+/*---Termostat s propojenim na Google docs sheet-----*/
 /*---------------------------------------------------*/
-//Comment 1
+
 /*
   **Vstupy**
   D2 GPIO4 - SW1 aut/man
@@ -539,3 +539,4 @@ void loop() {
 
 
 //End of the program
+//Comment 1
