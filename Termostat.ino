@@ -1,6 +1,7 @@
 /*---Termostat s propojenim na Google docs sheet-----*/
 /*---------------------------------------------------*/
-
+//diff1
+//diff2
 /*
   **Vstupy**
   D2 GPIO4 - SW1 aut/man
