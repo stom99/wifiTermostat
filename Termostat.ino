@@ -3,6 +3,7 @@
 //diff1
 //diff2
 //diff 3 local
+//diff 4 local
 
 /*
   **Vstupy**
