@@ -6,6 +6,7 @@
 //diff 4 local
 //diff 5 lokalní změna před pull
 //diff 6 lokalní změna před pull
+//diff 7 změna online
 
 /*
   **Vstupy**
