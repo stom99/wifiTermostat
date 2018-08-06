@@ -4,6 +4,7 @@
 //diff2
 //diff 3 local
 //diff 4 local
+//diff 5 lokalní změna před pull
 
 /*
   **Vstupy**
