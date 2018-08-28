@@ -8,6 +8,7 @@
 //diff 6 lokalní změna před pull
 //diff 7 změna online
 //diff 8 lokal commit
+//diff 9 lokal commit
 
 /*
   **Vstupy**
