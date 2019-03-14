@@ -8,5 +8,8 @@ main ()
 // Zmìna od uživatele 1
 
 
+// Zmìna od uživatele 3
+
+
 while(1);
 }
