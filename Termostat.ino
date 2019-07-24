@@ -9,6 +9,8 @@
 //diff 7 změna online
 //diff 8 lokal commit
 //diff 9 lokal commit
+//diff 10
+
 
 /*
   **Vstupy**
